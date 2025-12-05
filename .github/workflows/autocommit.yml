@@ -1,6 +1,7 @@
 name: Auto commit
 
 on:
+  
   push:
     branches:
       - main
