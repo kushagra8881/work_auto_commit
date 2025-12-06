@@ -1,12 +1,14 @@
-name: Auto commit
+name: Auto Commit Bot
 
 on:
-  
   push:
     branches:
       - main
 
   schedule:
+    # Run at 7 AM, 9 AM, 11 AM every day
+    - cron: "0 7 * * *"
+    - cron: "0 9 * * *"
     - cron: "0 11 * * *"
 
 jobs:
@@ -14,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: DEBUG 
+      - name: DEBUG
         run: echo "::debug::Ref = ${{ github.ref }}"
 
       - uses: actions/checkout@v3
@@ -22,30 +24,61 @@ jobs:
           persist-credentials: false
           fetch-depth: 0
 
-      - name: Modify last update
+      # 🆕 Random file update
+      - name: Modify random file
         run: |
-          d=`date '+%Y-%m-%dT%H:%M:%SZ'`
-          echo $d > LAST_UPDATED
+          files=("file1.txt" "file2.txt" "file3.txt" "status.log" "note.md" "LAST_UPDATED")
+          index=$(($RANDOM % ${#files[@]}))
           
+          selected=${files[$index]}
+          echo "Updating: $selected"
+          
+          # Write timestamp for randomness
+          echo "Updated at: $(date '+%Y-%m-%d %H:%M:%S')" > "$selected"
+
+      # 🆕 Improved random emoji commit messages
       - name: Commit changes
         run: |
-          git config --local user.email "kushagraparashar900@gmail.com"
+          git config --local user.email "kushagrparashar900@gmail.com"
           git config --local user.name "kushagra8881"
           git add -A
-          
-          arr[0]="chore(bot): 😂 auto commit"
-          arr[1]="chore(bot): 😱 auto commit"
-          arr[2]="chore(bot): 👿 auto commit"
-          arr[3]="chore(bot): 💩 auto commit"
-          arr[4]="chore(bot): 🙏 auto commit"
-          arr[5]="chore(bot): 🙈 auto commit"
-          arr[6]="chore(bot): 🐐 auto commit"
-          arr[7]="chore(bot): 🤖 auto commit"
-          arr[8]="chore(bot): 🟩 auto commit"
-          arr[9]="chore(bot): 👻 auto commit"
-          
-          rand=$[$RANDOM % ${#arr[@]}]
-          git commit -m "${arr[$rand]}" || echo "No changes to commit"
+
+          # 30+ fun emojis
+          commits=(
+            "🤖 Auto update"
+            "🔥 Auto commit"
+            "⚡ Bot updated files"
+            "✨ Routine maintenance"
+            "📌 Daily auto update"
+            "🚀 Commit by GitHub Action"
+            "🛠️ Auto fix"
+            "🌟 Automated patch"
+            "🎯 Bot target achieved"
+            "📅 Cron job update"
+            "📦 Scheduled update"
+            "🔄 Routine sync"
+            "🐐 Legendary auto commit"
+            "😎 Cool bot update"
+            "🤩 Random update"
+            "😈 Bot is working"
+            "👻 Ghost commit"
+            "🌈 Auto update magic"
+            "💡 Auto improvement"
+            "🎉 Random commit"
+            "💫 Automated tweak"
+            "💻 Code heartbeat"
+            "📂 File refresh"
+            "📈 Auto status update"
+            "❤️ Bot loves commits"
+            "💥 Boom! Auto commit"
+            "🙌 Auto push success"
+            "🐱‍👤 Stealth commit"
+            "🧠 Smart bot update"
+            "🎲 Randomized update"
+          )
+
+          msg_index=$(($RANDOM % ${#commits[@]}))
+          git commit -m "${commits[$msg_index]}" || echo "No changes to commit"
 
       - name: GitHub Push
         uses: ad-m/github-push-action@v0.6.0
