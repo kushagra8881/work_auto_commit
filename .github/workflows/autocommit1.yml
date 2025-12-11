@@ -4,7 +4,7 @@ on:
 
   push:
     branches:
-      - master
+      - main
       
   schedule:
     # Run at 7 AM, 9 AM, 11 AM every day
